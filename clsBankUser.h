@@ -98,6 +98,18 @@ private:
             MyFile.close();
         }
     }
+     string _PrepareLogInRecord(string Separator = "#//#")
+    {
+
+        string LoginRecord = "";
+
+        LoginRecord += clsDate::GetSystemDateTimeString() + Separator;
+        LoginRecord += GetUserName() + Separator;
+        LoginRecord += GetPassword() + Separator;
+        LoginRecord += to_string(GetPermissions());
+
+        return LoginRecord;
+    }
 
     void _Update()
     {
@@ -352,5 +364,19 @@ public:
         {
             return false;
         }
+    }
+
+     void RegisterLogIn()
+    {
+        string stDataLine = _PrepareLogInRecord();
+
+        fstream MyFile;
+
+        MyFile.open("LoginRegister.txt", ios::out | ios::app);
+        if (MyFile.is_open())
+        {
+            MyFile << stDataLine << endl;
+        }
+        MyFile.close();
     }
 };
