@@ -6,12 +6,10 @@
 #include <fstream>
 #include "clsBankUser.h"
 
-
-class clsLoginRegisterScreen :protected clsScreen
+class clsLoginRegisterScreen : protected clsScreen
 {
 
 private:
-    
     static void PrintLoginRegisterRecordLine(clsUser::stLoginRegisters LoginRegisterRecord)
     {
 
@@ -22,26 +20,31 @@ private:
     }
 
 public:
-  
     static void ShowLoginRegisterScreen()
     {
+        if (!CheckAccessRights(clsUser::enPermission::epShowLoginRegisters))
+        {
+            return;
+        }
 
-        vector <clsUser::stLoginRegisters> vLoginRegisterRecord = clsUser::GetLoginRegisterRecord();
-  
+        vector<clsUser::stLoginRegisters> vLoginRegisterRecord = clsUser::GetLoginRegisterRecord();
+
         string Title = "\tLogin Register List Screen";
-        string SubTitle =  "\t\t(" + to_string(vLoginRegisterRecord.size()) + ") Record(s).";
+        string SubTitle = "\t\t(" + to_string(vLoginRegisterRecord.size()) + ") Record(s).";
 
         _DrawScreenHeader(Title, SubTitle);
 
         cout << setw(8) << left << "" << "\n\t_______________________________________________________";
-        cout << "_________________________________________\n" << endl;
+        cout << "_________________________________________\n"
+             << endl;
 
         cout << setw(8) << left << "" << "| " << left << setw(35) << "Date/Time";
         cout << "| " << left << setw(20) << "UserName";
         cout << "| " << left << setw(20) << "Password";
         cout << "| " << left << setw(10) << "Permissions";
         cout << setw(8) << left << "" << "\n\t_______________________________________________________";
-        cout << "_________________________________________\n" << endl;
+        cout << "_________________________________________\n"
+             << endl;
 
         if (vLoginRegisterRecord.size() == 0)
             cout << "\t\t\t\tNo Logins Available In the System!";
@@ -55,9 +58,7 @@ public:
             }
 
         cout << setw(8) << left << "" << "\n\t_______________________________________________________";
-        cout << "_________________________________________\n" << endl;
-
+        cout << "_________________________________________\n"
+             << endl;
     }
-
 };
-

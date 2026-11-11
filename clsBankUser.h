@@ -268,7 +268,8 @@ public:
         epUpdateClinet = 8,
         epFindClinet = 16,
         epTransactions = 32,
-        epManageUsers = 64
+        epManageUsers = 64,
+        epShowLoginRegisters=128
     };
     struct stLoginRegisters
     {
