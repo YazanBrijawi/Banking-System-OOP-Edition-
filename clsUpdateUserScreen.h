@@ -85,6 +85,12 @@ private:
         {
             PermissionValue += clsUser::enPermission::epManageUsers;
         }
+        cout << "Access To Login Registers Menu? y/n ";
+        cin >> ans;
+        if (ans == 'y' || ans == 'Y')
+        {
+            PermissionValue += clsUser::enPermission::epShowLoginRegisters;
+        }
 
         return PermissionValue;
     }
