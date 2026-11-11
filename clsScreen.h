@@ -1,7 +1,7 @@
 #pragma once
 #include <bits/stdc++.h>
 #include "clsGlobal.h"
-#include "clsDate.h"
+
 using namespace std;
 
 class clsScreen
@@ -18,9 +18,7 @@ protected:
         cout << "\n\t\t\t\t\t______________________________________\n\n";
         clsDate Date;
         cout << "\t\t\t\t\tUser : " << CurrentUser.GetUserName() << endl;
-        cout << "\t\t\t\t\tDate : "  ;
-        Date.Print();
-        cout << endl;
+        cout << "\t\t\t\t\tDate : " << clsDate::DateToString(clsDate()) << endl;
     }
 
     static bool CheckAccessRights(clsUser::enPermission Permission)
