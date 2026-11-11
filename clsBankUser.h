@@ -98,7 +98,7 @@ private:
             MyFile.close();
         }
     }
-     string _PrepareLogInRecord(string Separator = "#//#")
+    string _PrepareLogInRecord(string Separator = "#//#")
     {
 
         string LoginRecord = "";
@@ -270,6 +270,13 @@ public:
         epTransactions = 32,
         epManageUsers = 64
     };
+    struct stLoginRegisters
+    {
+        string DateTime;
+        string UserName;
+        string Password;
+        int Permission;
+    };
 
     enSaveResults Save()
     {
@@ -366,7 +373,7 @@ public:
         }
     }
 
-     void RegisterLogIn()
+    void RegisterLogIn()
     {
         string stDataLine = _PrepareLogInRecord();
 
@@ -378,5 +385,44 @@ public:
             MyFile << stDataLine << endl;
         }
         MyFile.close();
+    }
+
+    static stLoginRegisters _ConvertLinetoUserLoginRegister(string Line, string Separator = "#//#")
+    {
+        stLoginRegisters LoginRegisterRecord;
+        vector<string> LoginRegisterData = clsString::Split(Line, Separator);
+        LoginRegisterRecord.DateTime += LoginRegisterData[0];
+        LoginRegisterRecord.UserName += LoginRegisterData[1];
+        LoginRegisterRecord.Password += LoginRegisterData[2];
+        LoginRegisterRecord.Permission += stoi(LoginRegisterData[3]);
+        return LoginRegisterRecord;
+    }
+
+    static vector<stLoginRegisters> GetLoginRegisterRecord()
+    {
+
+        vector<stLoginRegisters> vLoginRegisterRecord;
+
+        fstream MyFile;
+        MyFile.open("LoginRegister.txt", ios::in); // read Mode
+
+        if (MyFile.is_open())
+        {
+
+            string Line;
+            stLoginRegisters LoginRegisterRecord;
+
+            while (getline(MyFile, Line))
+            {
+
+                LoginRegisterRecord = _ConvertLinetoUserLoginRegister(Line);
+
+                vLoginRegisterRecord.push_back(LoginRegisterRecord);
+            }
+
+            MyFile.close();
+        }
+
+        return vLoginRegisterRecord;
     }
 };
