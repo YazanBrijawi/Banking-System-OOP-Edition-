@@ -336,7 +336,6 @@ public:
     {
         return _LoadClientsDataFromFile();
     }
-    
 
     static double GetClientsBalances()
     {
@@ -365,6 +364,21 @@ public:
 
             _AccountBalance -= Amount;
             Save();
+            return true;
+        }
+    }
+    bool Transfer(float Amount, clsBankClient &DestinaionClient)
+    {
+        if (Amount > _AccountBalance)
+        {
+            return false;
+        }
+        else
+        {
+            if (!WithDraw(Amount))
+                return false;
+            DestinaionClient.Deposit(Amount);
+            return true;
         }
     }
 
