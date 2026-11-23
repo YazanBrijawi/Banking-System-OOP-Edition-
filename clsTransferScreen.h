@@ -67,7 +67,7 @@ public:
         cin >> Answer;
         if (Answer == 'Y' || Answer == 'y')
         {
-            if (SourceClient.Transfer(Amount, DestinationClient))
+            if (SourceClient.Transfer(Amount, DestinationClient,CurrentUser.GetUserName()))
             {
                 cout << "\nTransfer done successfully\n";
             }
