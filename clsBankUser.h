@@ -269,7 +269,7 @@ public:
         epFindClinet = 16,
         epTransactions = 32,
         epManageUsers = 64,
-        epShowLoginRegisters=128
+        epShowLoginRegisters = 128
     };
     struct stLoginRegisters
     {
@@ -278,7 +278,7 @@ public:
         string Password;
         int Permission;
     };
-
+    
     enSaveResults Save()
     {
 

@@ -2,6 +2,7 @@
 #include <bits/stdc++.h>
 #include "clsPerson.h"
 #include "clsString.h"
+#include "clsDate.h"
 
 using namespace std;
 
@@ -103,6 +104,36 @@ private:
         }
 
         return vClients;
+    }
+
+    string _PrepareTransactionsRecord(clsBankClient DestinationClient, float Amount, string UserName)
+    {
+        string Separator = "#//#";
+
+        string TransactionsRecord = "";
+
+        TransactionsRecord += clsDate::GetSystemDateTimeString() + Separator;
+        TransactionsRecord += GetAccountNumber() + Separator;
+        TransactionsRecord += DestinationClient.AccountNumber() + Separator;
+        TransactionsRecord += to_string(Amount) + Separator;
+        TransactionsRecord += to_string(GetAccountBalance()) + Separator;
+        TransactionsRecord += to_string(DestinationClient.GetAccountBalance()) + Separator;
+        TransactionsRecord += UserName;
+
+        return TransactionsRecord;
+    }
+    void _TransactionsRecord(clsBankClient DestinationClient, float Amount, string UserName)
+    {
+        string stDataLine = _PrepareTransactionsRecord(DestinationClient, Amount, UserName);
+
+        fstream MyFile;
+
+        MyFile.open("Transactions.txt", ios::out | ios::app);
+        if (MyFile.is_open())
+        {
+            MyFile << stDataLine << endl;
+        }
+        MyFile.close();
     }
 
     void _Update()
@@ -336,7 +367,6 @@ public:
     {
         return _LoadClientsDataFromFile();
     }
-    
 
     static double GetClientsBalances()
     {
@@ -365,6 +395,22 @@ public:
 
             _AccountBalance -= Amount;
             Save();
+            return true;
+        }
+    }
+    bool Transfer(float Amount, clsBankClient &DestinaionClient, string UserName)
+    {
+        if (Amount > _AccountBalance)
+        {
+            return false;
+        }
+        else
+        {
+            if (!WithDraw(Amount))
+                return false;
+            DestinaionClient.Deposit(Amount);
+            _TransactionsRecord(DestinaionClient, Amount, UserName);
+            return true;
         }
     }
 
@@ -378,5 +424,58 @@ public:
         }
 
         return TotalBalances;
+    }
+
+    struct stTransactionsLog
+    {
+        string SourceClient;
+        string DestinationClient;
+        string DateTime;
+        double SourceClientBalance;
+        double DestinationClientBalance;
+        double Amount;
+        string User;
+    };
+
+    static stTransactionsLog _ConvertLinetoUserTransactions(string Line, string Separator = "#//#")
+    {
+        stTransactionsLog Transactions;
+        vector<string> TransactionsData = clsString::Split(Line, Separator);
+        Transactions.DateTime += TransactionsData[0];
+        Transactions.SourceClient += TransactionsData[1];
+        Transactions.DestinationClient += TransactionsData[2];
+        Transactions.Amount += stof(TransactionsData[3]);
+        Transactions.SourceClientBalance += stof(TransactionsData[4]);
+        Transactions.DestinationClientBalance += stof(TransactionsData[5]);
+        Transactions.User += TransactionsData[6];
+        return Transactions;
+    }
+
+    static vector<stTransactionsLog> GetTransactionsRecord()
+    {
+
+        vector<stTransactionsLog> vTransactionsRecord;
+
+        fstream MyFile;
+        MyFile.open("Transactions.txt", ios::in); // read Mode
+
+        if (MyFile.is_open())
+        {
+
+            string Line;
+            stTransactionsLog TransactionsRecord;
+
+            while (getline(MyFile, Line))
+            {
+
+                TransactionsRecord = _ConvertLinetoUserTransactions(Line);
+
+                vTransactionsRecord.push_back(TransactionsRecord);
+            }
+
+            MyFile.close();
+        }
+
+        return vTransactionsRecord;
     }
 };

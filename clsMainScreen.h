@@ -12,6 +12,7 @@
 #include "clsGlobal.h"
 #include "clsLoginRegisterScreen.h"
 
+
 using namespace std;
 
 class clsMainScreen : protected clsScreen
@@ -142,7 +143,6 @@ private:
             _ShowLoginRegisterMenu();
             _GoBackToMainMenu();
             break;
-
         case enMainMenuOptions::eExit:
             system("cls");
             _LogOut();
