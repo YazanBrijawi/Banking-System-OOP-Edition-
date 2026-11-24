@@ -47,6 +47,7 @@ Permissions are stored as a **bitmask**:
 | Find Client | `16` |
 | Transactions | `32` |
 | Manage Users | `64` |
+|Show Login Registers| `128` |
 
 Example: a user with permissions `1 + 16 + 32 = 49` can list clients, find clients, and do transactions only.
 
