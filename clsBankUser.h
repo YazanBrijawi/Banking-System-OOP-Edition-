@@ -3,6 +3,7 @@
 #include <string>
 #include "clsPerson.h"
 #include "clsString.h"
+#include "clsUtility.h"
 #include <vector>
 #include <fstream>
 
@@ -22,12 +23,12 @@ private:
     int _Permissions;
 
     bool _MarkedForDelete = false;
-
+    static const short _EncryptionKey = 67;
     static clsUser _ConvertLinetoUserObject(string Line, string Separator = "#//#")
     {
         vector<string> vUserData;
         vUserData = clsString::Split(Line, Separator);
-
+        vUserData[5] = clsUtility::DencryPtion(vUserData[5], _EncryptionKey);
         return clsUser(enMode::UpdateMode, vUserData[0], vUserData[1], vUserData[2],
                        vUserData[3], vUserData[4], vUserData[5], stoi(vUserData[6]));
     }
@@ -41,7 +42,7 @@ private:
         UserRecord += User.GetEmail() + Separator;
         UserRecord += User.GetPhone() + Separator;
         UserRecord += User.GetUserName() + Separator;
-        UserRecord += User.GetPassword() + Separator;
+        UserRecord += clsUtility::EncryPtion(User.GetPassword(), _EncryptionKey) + Separator;
         UserRecord += to_string(User.GetPermissions());
 
         return UserRecord;
@@ -105,7 +106,7 @@ private:
 
         LoginRecord += clsDate::GetSystemDateTimeString() + Separator;
         LoginRecord += GetUserName() + Separator;
-        LoginRecord += GetPassword() + Separator;
+        LoginRecord += clsUtility::EncryPtion(GetPassword(), _EncryptionKey) + Separator;
         LoginRecord += to_string(GetPermissions());
 
         return LoginRecord;
@@ -278,7 +279,7 @@ public:
         string Password;
         int Permission;
     };
-    
+
     enSaveResults Save()
     {
 
@@ -392,9 +393,10 @@ public:
     {
         stLoginRegisters LoginRegisterRecord;
         vector<string> LoginRegisterData = clsString::Split(Line, Separator);
+      
         LoginRegisterRecord.DateTime += LoginRegisterData[0];
         LoginRegisterRecord.UserName += LoginRegisterData[1];
-        LoginRegisterRecord.Password += LoginRegisterData[2];
+        LoginRegisterRecord.Password +=  clsUtility::DencryPtion(LoginRegisterData[2], _EncryptionKey);
         LoginRegisterRecord.Permission += stoi(LoginRegisterData[3]);
         return LoginRegisterRecord;
     }
